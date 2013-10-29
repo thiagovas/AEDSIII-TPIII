@@ -50,11 +50,16 @@ void Heapify(heap *obj, int index)
 }
 
 /* Método que insere um novo elemento na heap. */
-void PushHeap(heap *obj, heap_item value)
+void PushHeap(heap *obj, unsigned int valor, char mark)
 {
+	char atual = FrontHeapMark(obj);
 	int index = SizeHeap(obj);
 	heap_item *temp = (heap_item*) realloc(obj->values, (SizeHeap(obj)+1)*sizeof(heap_item));
 	heap_item swap;
+	
+	heap_item neue;
+	neue.value = valor;
+	neue.mark = mark;
 	
 	if(temp == NULL)
 	{
@@ -65,10 +70,10 @@ void PushHeap(heap *obj, heap_item value)
 	}
 	
 	obj->values = temp;
-	obj->values[obj->size] = value;
+	obj->values[index] = neue;
 	obj->size += 1;
 	
-	while(index > 0 && !obj->func(obj->values[Father(index)].value, obj->values[index].value))
+	while(index > 0 && (!obj->func(obj->values[Father(index)].value, obj->values[index].value) || obj->values[index].mark == atual))
 	{
 		swap = obj->values[Father(index)];
 		obj->values[Father(index)] = obj->values[index];
@@ -77,10 +82,17 @@ void PushHeap(heap *obj, heap_item value)
 	}
 }
 
-/* Função que retorna o elemento raiz da heap. */
-heap_item FrontHeap(heap *obj)
+/* Função que retorna o valor do elemento raiz da heap. */
+unsigned int FrontHeapValue(heap *obj)
 {
-	return obj->values[0];
+	return obj->values[0].value;
+}
+
+
+/* Função que retorna o valor da variável mark do elemento raiz da heap. */
+char FrontHeapMark(heap *obj)
+{
+	return obj->values[0].mark;
 }
 
 /* Método que retira o elemento raiz da heap. */

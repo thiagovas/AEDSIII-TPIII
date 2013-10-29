@@ -11,7 +11,7 @@
 
 typedef struct{
 	unsigned int value;
-	int mark;
+	char mark;
 } heap_item;
 
 typedef struct{
@@ -33,10 +33,13 @@ void InitHeap(heap *obj, int (*func)(const unsigned int, const unsigned int));
 void ClearHeap(heap *obj);
 
 /* Método que insere um novo elemento na heap. */
-void PushHeap(heap *obj, heap_item value);
+void PushHeap(heap *obj, unsigned int valor, char mark);
 
-/* Função que retorna o elemento raiz da heap. */
-heap_item FrontHeap(heap *obj);
+/* Função que retorna o valor do elemento raiz da heap. */
+unsigned int FrontHeapValue(heap *obj);
+
+/* Função que retorna o valor da variável mark do elemento raiz da heap. */
+char FrontHeapMark(heap *obj);
 
 /* Método que organiza a heap. */
 void Heapify(heap *obj, int index);

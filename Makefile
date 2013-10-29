@@ -4,14 +4,17 @@ CC=gcc
 
 all: build clearafter
 
-build: main.o heap.o
-	$(CC) main.o heap.o -o tp3
+build: main.o heap.o vector.o
+	$(CC) main.o heap.o vector.o -o tp3 -lm
 
 main.o: heap.h
 	$(CC) -c main.c -o main.o
 
 heap.o:
 	$(CC) -c heap.c -o heap.o
+
+vector.o:
+	$(CC) -c vector.c -o vector.o
 
 #Clear temporary files after compiling
 clearafter:
@@ -21,4 +24,4 @@ clearafter:
 	rm -rf *~ #Remove temporary files
 
 clear: clearafter
-	rm -f tp1
+	rm -f tp3
