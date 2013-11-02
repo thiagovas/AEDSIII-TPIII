@@ -5,9 +5,9 @@ CC=gcc
 all: build clearafter
 
 build: main.o heap.o vector.o externalSorting.o utility.o
-	$(CC) main.o heap.o vector.o externalSorting.o -o tp3 -lm -O2
+	$(CC) main.o heap.o vector.o externalSorting.o utility.o -o tp3 -lm -O2
 
-main.o: utility.o externalSorting.o
+main.o: externalSorting.o utility.o
 	$(CC) -c main.c -o main.o
 
 heap.o:

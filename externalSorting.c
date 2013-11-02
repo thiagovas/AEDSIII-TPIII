@@ -6,7 +6,7 @@
 
 void openStream(fita *obj, char nomeFita[])
 {
-	obj->fita = fopen(nomeFita, "w");
+	obj->f = fopen(nomeFita, "w");
 }
 
 void closeStream(fita *obj)
@@ -16,12 +16,12 @@ void closeStream(fita *obj)
 
 void writeInteger(fita *obj, int value)
 {
-	fprintf(obj->fita, "%d ", value);
+	fprintf(obj->f, "%d ", value);
 }
 
 void writeEndOfBlock(fita *obj)
 {
-	fprintf(obj->fita, "0\n");
+	fprintf(obj->f, "0\n");
 }
 
 /* Método que ordena o arquivo input e imprime o resultado e output. */
@@ -31,7 +31,7 @@ void writeEndOfBlock(fita *obj)
 /* @Param numberScratchFiles: Parametro que recebe o número de fitas a serem usadas. */
 void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 {
-	fita *fitas = (fita)alloc(numScratchFiles, sizeof(fita));
+	fita *fitas = (fita*)alloc(numberScratchFiles, sizeof(fita));
 	int i, data, atualValue = 0, max = floor(((double)maxMemory)/sizeof(heap_item));
 	char f[13] = "f", atualMark = '\0';
 	heap priority_queue;
@@ -41,7 +41,7 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 	/* Leitura dos primeiros max números da entrada */
 	while(i < max && !feof(input))
 	{
-		fscanf(entrada, "%d", &data);
+		fscanf(input, "%d", &data);
 		PushHeap(&priority_queue, data, 0);
 		i++;
 	}
@@ -62,7 +62,7 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 		fscanf(input, "%d", &data);
 		
 		PopHeap(&priority_queue);
-		if(input < atualValue)
+		if(data < atualValue)
 			PushHeap(&priority_queue, data, (atualMark+1)%2);
 		else
 			PushHeap(&priority_queue, data, atualMark);
@@ -80,7 +80,7 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 
 	/* Fechando as streams das fitas. */
 	for(i = 0; i < numberScratchFiles; i++)
-		closeStream(fitas[i]);
+		closeStream(&fitas[i]);
 	
 	free(fitas);
 }
