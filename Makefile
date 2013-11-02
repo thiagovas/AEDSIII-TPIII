@@ -16,7 +16,7 @@ heap.o:
 vector.o:
 	$(CC) -c vector.c -o vector.o
 
-externalSorting.o: utility.o heap.o
+externalSorting.o: utility.o heap.o vector.o
 	$(CC) -c externalSorting.c -o externalSorting.o
 
 utility.o:

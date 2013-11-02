@@ -11,6 +11,7 @@
 #include <string.h>
 #include "heap.h"
 #include "utility.h"
+#include "vector.h"
 
 typedef struct{
 	FILE *f;

@@ -31,11 +31,12 @@ void writeEndOfBlock(fita *obj)
 /* @Param numberScratchFiles: Parametro que recebe o número de fitas a serem usadas. */
 void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 {
-	fita *fitas = (fita*)alloc(numberScratchFiles, sizeof(fita));
-	int i, data, atualValue = 0, max = floor(((double)maxMemory)/sizeof(heap_item));
+	fita *fitas = NULL;
+	int i, data, atualValue = 0, max = floor(((double)maxMemory)/sizeof(heap_item)); // Max guarda o número máximo de elementos que a heap pode guardar.
 	char f[13] = "f", atualMark = '\0';
 	heap priority_queue;
 	
+	fitas = (fita*)alloc(numberScratchFiles, sizeof(fita));
 	InitHeap(&priority_queue, comp);
 	i = 0;
 	/* Leitura dos primeiros max números da entrada */
