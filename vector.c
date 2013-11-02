@@ -1,5 +1,5 @@
 /*
-    Feito por Thiago Vieira
+    Made by Thiago Vieira
 */
 
 #include "vector.h"

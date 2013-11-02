@@ -1,5 +1,5 @@
 /*
-    Feito por Thiago Vieira
+    Made by Thiago Vieira
 */
 
 #ifndef _heap_h

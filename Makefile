@@ -4,10 +4,10 @@ CC=gcc
 
 all: build clearafter
 
-build: main.o heap.o vector.o
-	$(CC) main.o heap.o vector.o -o tp3 -lm
+build: main.o heap.o vector.o externalSorting.o utility.o
+	$(CC) main.o heap.o vector.o externalSorting.o -o tp3 -lm -O2
 
-main.o: heap.h
+main.o: utility.o externalSorting.o
 	$(CC) -c main.c -o main.o
 
 heap.o:
@@ -15,6 +15,12 @@ heap.o:
 
 vector.o:
 	$(CC) -c vector.c -o vector.o
+
+externalSorting.o: utility.o heap.o
+	$(CC) -c externalSorting.c -o externalSorting.o
+
+utility.o:
+	$(CC) -c utility.c -o utility.o
 
 #Clear temporary files after compiling
 clearafter:
@@ -25,3 +31,4 @@ clearafter:
 
 clear: clearafter
 	rm -f tp3
+	rm -rf *.scratch

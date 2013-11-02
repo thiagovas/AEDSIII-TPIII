@@ -1,10 +1,10 @@
 /*
-    Feito por Thiago Vieira
+    Made by Thiago Vieira
 */
 
 #include "heap.h"
 
-/* http://pt.wikipedia.org/wiki/Heap */
+/* http://en.wikipedia.org/wiki/Heap_(data_structure) */
 
 /* Método que inicializa a heap. A função recebida é usada para organizar os valores pela heap. */
 void InitHeap(heap *obj, int (*func)(const unsigned int, const unsigned int))
