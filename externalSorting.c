@@ -65,7 +65,7 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 		
 		PopHeap(&priority_queue);
 		if(data < atualValue)
-			PushHeap(&priority_queue, data, (atualMark+1)%2);
+			PushHeap(&priority_queue, data, (atualMark+1)%2); // (atualMark+1)%2 inverte o valor de atualMark, de 0 para 1 ou de 1 para 0.
 		else
 			PushHeap(&priority_queue, data, atualMark);
 		
@@ -80,11 +80,123 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 		}
 		fscanf(input, "%d", &data);
 	}
-
+	
+	while(!EmptyHeap(&priority_queue))
+	{
+		atualMark = FrontHeapMark(&priority_queue);
+		atualValue = FrontHeapValue(&priority_queue);
+		
+		PopHeap(&priority_queue);
+		writeInteger(&fitas[i], atualValue);
+		
+		/* Verificando se estou no último elemento de um bloco. */
+		if(atualMark != FrontHeapMark(&priority_queue))
+		{
+			writeEndOfBlock(&fitas[i]);
+			i += 1;
+			i %= numberScratchFiles;
+		}
+	}
+	ClearHeap(&priority_queue);
+	
 	/* Fechando as streams das fitas. */
 	for(i = 0; i < numberScratchFiles; i++)
 		closeStream(&fitas[i]);
 	
 	free(fitas);
+	
+	merge(max, numberScratchFiles);
 }
 
+/* Método que faz a intercalação das fitas. */
+/* @Param maxHeapElements: Parametro que indica o número máximo de elementos que a heap pode ter. */
+/* @Param numberScratchFiles: Parametro que recebe o número de fitas que estão sendo usadas. */
+void merge(int maxHeapElements, int numberScratchFiles)
+{
+	int i = 0, currentScratchFile = numberScratchFiles, data, numberActiveFiles = 0, numberfeof = 0;
+	heap priority_queue;
+	char f[13] = "f";
+	fita *scratch = (fita*)alloc(2*numberScratchFiles, sizeof(fita));
+	
+	InitHeap(&priority_queue, comp);
+	
+	for(i = 0; i < numberScratchFiles; i++)
+	{
+		sprintf(f, "f%d.scratch", i);
+		openStream(&scratch[i], f);
+		fscanf(scratch[i].f, "%d", &data);
+		PushHeap(&priority_queue, data);
+	}
+	
+	
+	numberfeof = 0;
+	while(numberfeof < numberScratchFiles)
+	{
+		activateScratchFiles(scratch, numberScratchFiles);
+		numberActiveFiles = numberScratchFiles;
+		i = 0;
+		while(numberActiveFiles > 0)
+		{
+			if(scratch[i].active == 0)
+			{
+				i += 1;
+				i %= numberScratchFiles;
+				continue;
+			}
+			
+			fscanf(scratch[i].f, "%d", &data);
+			if(feof(scratch[i].f))
+			{
+				numberfeof++;
+				scratch[i].active = 0;
+				numberActiveFiles--;
+			}
+			else if(data == 0)
+			{
+				scratch[i].active = 0;
+				numberActiveFiles--;
+			}
+			else
+			{
+				if(SizeHeap(&priority_queue) == maxHeapElements)
+				{
+					
+				}
+				else
+				{
+					
+				}
+			}
+		}
+	}
+	
+	for(i = 0; i < numberScratchFiles; i++)
+		closeStream(&scratch[i], f);
+	
+	ClearHeap(&priority_queue);
+	free(scratch);
+}
+
+
+void activateScratchFiles(fita *scratchFiles, int n)
+{
+	int i = 0;
+	for(i = 0; i < n; i++0
+		scratchFiles[i].active = 1;
+}
+
+void deactivateScratchFile(fita *scratchFiles, int index)
+{
+	scratchFiles[i].active = 0;
+}
+
+int isActive(fita *scratchFiles, int index)
+{
+	return scratchFiles[i].active == 1;
+}
+
+void addCounter(int &i, int mod)
+{
+	*i += 1;
+	*i %= mod;
+}
