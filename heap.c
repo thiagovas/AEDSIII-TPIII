@@ -85,6 +85,7 @@ void PushHeap(heap *obj, unsigned int valor, char mark)
 /* Função que retorna o valor do elemento raiz da heap. */
 unsigned int FrontHeapValue(heap *obj)
 {
+	if(SizeHeap(obj) == 0) return -1;
 	return obj->values[0].value;
 }
 
@@ -92,6 +93,7 @@ unsigned int FrontHeapValue(heap *obj)
 /* Função que retorna o valor da variável mark do elemento raiz da heap. */
 char FrontHeapMark(heap *obj)
 {
+	if(SizeHeap(obj) == 0) return 0;
 	return obj->values[0].mark;
 }
 

@@ -17,12 +17,6 @@ typedef struct{
 	FILE *f;
 } fita;
 
-/*
-	Made by Thiago Vieira
-*/
-
-#include "externalSorting.h"
-
 void openStream(fita *obj, char nomeFita[]);
 
 void closeStream(fita *obj);

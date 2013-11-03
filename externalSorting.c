@@ -43,6 +43,7 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 	while(i < max && !feof(input))
 	{
 		fscanf(input, "%d", &data);
+		printf("%d\n", data);
 		PushHeap(&priority_queue, data, 0);
 		i++;
 	}
