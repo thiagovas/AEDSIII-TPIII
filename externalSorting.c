@@ -39,12 +39,13 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 	fitas = (fita*)alloc(numberScratchFiles, sizeof(fita));
 	InitHeap(&priority_queue, comp);
 	i = 0;
+	
 	/* Leitura dos primeiros max números da entrada */
+	fscanf(input, "%d", &data); // http://stackoverflow.com/questions/5431941/while-feof-file-is-always-wrong
 	while(i < max && !feof(input))
 	{
-		fscanf(input, "%d", &data);
-		printf("%d\n", data);
 		PushHeap(&priority_queue, data, 0);
+		fscanf(input, "%d", &data);
 		i++;
 	}
 	
@@ -61,7 +62,6 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 	{
 		atualMark = FrontHeapMark(&priority_queue);
 		atualValue = FrontHeapValue(&priority_queue);
-		fscanf(input, "%d", &data);
 		
 		PopHeap(&priority_queue);
 		if(data < atualValue)
@@ -78,6 +78,7 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 			i += 1;
 			i %= numberScratchFiles;
 		}
+		fscanf(input, "%d", &data);
 	}
 
 	/* Fechando as streams das fitas. */
@@ -86,3 +87,4 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 	
 	free(fitas);
 }
+

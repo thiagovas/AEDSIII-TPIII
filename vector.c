@@ -104,3 +104,4 @@ int At(vector *obj, int index)
 /* Método que edita o valor de um elemento do vector. */
 void EditItem(vector *obj, int index, int newValue)
 {	obj->list[index].value = newValue; }
+

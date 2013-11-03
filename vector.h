@@ -56,3 +56,4 @@ int At(vector *obj, int index);
 void EditItem(vector *obj, int index, int newValue);
 
 #endif
+

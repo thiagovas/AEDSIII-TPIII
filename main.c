@@ -18,6 +18,12 @@ int main(int argc, char *argv[])
 	
 	FILE *entrada, *saida;
 	entrada = fopen(argv[1], "r");
+	if(entrada == NULL)
+	{
+		printf("Erro ao abrir o arquivo de entrada. O arquivo existe mesmo?\n");
+		return 1;
+	}
+	
 	saida = fopen(argv[2], "w");
 	
 	sort(entrada, saida, stringtoint(argv[4]), stringtoint(argv[3]));
