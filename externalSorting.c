@@ -117,7 +117,7 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles)
 	
 	free(fitas);
 	
-	//merge(max, numberScratchFiles);
+	merge(max, numberScratchFiles);
 }
 
 /* Método que faz a intercalação das fitas. */
@@ -131,29 +131,35 @@ void merge(int maxHeapElements, int numberScratchFiles)
 	heap priority_queue;
 	char f[13] = "f";
 	fita *scratch = (fita*)alloc(2*numberScratchFiles, sizeof(fita));
-	FILE *temp = NULL;
+	
 	
 	InitHeap(&priority_queue, comp);
-	
 	op = 0;
 	while((output = IsItOver(op, numberScratchFiles)) < 0)
 	{
 		BeginMerge(&priority_queue, scratch, op, numberScratchFiles);
 		numberfeof = 0;
-		if(op)
-			i = 0;
-		else
-			i = numberScratchFiles;
 		
 		while(numberfeof < numberScratchFiles)
 		{
-			activateScratchFiles(scratch, numberScratchFiles);
+			activateScratchFiles(scratch, 2*numberScratchFiles);
 			numberActiveFiles = numberScratchFiles;
+			
+			if(op == 0)
+				i = 0;
+			else
+				i = numberScratchFiles;
+			
 			while(numberActiveFiles > 0)
 			{
-				if(scratch[i].active == 0) continue;
+				if(scratch[i].active == 0)
+				{
+					addCounterOp(&i, op, numberScratchFiles);
+					continue;
+				}
 				
 				fscanf(scratch[i].f, "%u", &data);
+				
 				if(feof(scratch[i].f))
 				{
 					numberfeof++;
@@ -167,43 +173,103 @@ void merge(int maxHeapElements, int numberScratchFiles)
 				}
 				else
 				{
-					if(SizeHeap(&priority_queue) == maxHeapElements)
+					if(SizeHeap(&priority_queue) > 0)
 					{
 						if(op)
+						{
 							sprintf(f, "f%d.scratch", i-numberScratchFiles);
+							openStream(&scratch[i-numberScratchFiles], f, "a+");
+							writeInteger(&scratch[i-numberScratchFiles], FrontHeapValue(&priority_queue));
+							closeStream(&scratch[i-numberScratchFiles]);
+						}
 						else
-							sprintf(f, "f%d.scratch", i+numberScratchFiles);
-						temp = fopen(f, "a+");
-						
-						writeStream(temp, FrontHeapValue(&priority_queue));
+						{
+							sprintf(f, "f%d.scratch", i+numberScratchFiles);	
+							openStream(&scratch[i+numberScratchFiles], f, "a+");
+							writeInteger(&scratch[i+numberScratchFiles], FrontHeapValue(&priority_queue));
+							closeStream(&scratch[i+numberScratchFiles]);
+						}
 						PopHeap(&priority_queue);
-						
-						fclose(temp);
-						temp = NULL;
 					}
 					PushHeap(&priority_queue, data, 0);				
 				}
+				//addCounterOp(&i, op, numberScratchFiles);
 			}
 			
+			/*
 			if(op == 0)
-				addCounter(&i, 0, numberScratchFiles);
+			{
+				for(i = numberScratchFiles; i < 2*numberScratchFiles; i++)
+				{
+					sprintf(f, "f%d.scratch", i);
+					openStream(&scratch[i], f, "a+");
+					writeEndOfBlock(&scratch[i]);
+					closeStream(&scratch[i]);
+				}
+			}
 			else
-				addCounter(&i, numberScratchFiles, 2*numberScratchFiles);
+			{
+				for(i = 0; i < numberScratchFiles; i++)
+				{
+					sprintf(f, "f%d.scratch", i);
+					openStream(&scratch[i], f, "a+");
+					writeEndOfBlock(&scratch[i]);
+					closeStream(&scratch[i]);
+				}
+			}*/
 		}
+		// TODO: Limpar a heap
 		EndMerge(scratch, op, numberScratchFiles);
 		op = (op+1)%2;
 	}
 	
+	printf("OH %d\n", output);
 	ClearHeap(&priority_queue);
 	free(scratch);
 }
 
+/* */
+int IsItOver(int op, int numberScratchFiles)
+{
+	int i, begin = 0, end = 0, outputFile = -1;
+	char f[13] = "f";
+	FILE *temp = NULL;
+	
+	if(op == 0)
+	{
+		begin = 0;
+		end = numberScratchFiles;
+	}
+	else
+	{
+		begin = numberScratchFiles;
+		end = 2*numberScratchFiles;
+	}
+	
+	for(i = begin; i < end; i++)
+	{
+		sprintf(f, "f%d.scratch", i);
+		
+		if(!isFileEmpty(f))
+		{
+			if(outputFile > 0)
+			{
+				outputFile = -1;
+				break;
+			}
+			else outputFile = i;
+		}
+	}
+	
+	return outputFile;
+}
+
 void BeginMerge(heap *h, fita *scratch, int op, int numberScratchFiles)
 {
-	int i, begin, end, data;
+	int i, begin, end, data = 0;
 	char f[13] = "f";
 	
-	if(op == 1)
+	if(op == 0)
 	{
 		begin = 0;
 		end = numberScratchFiles;
@@ -231,6 +297,7 @@ void BeginMerge(heap *h, fita *scratch, int op, int numberScratchFiles)
 		sprintf(f, "f%d.scratch", i);
 		openStream(&scratch[i], f, "r");
 		fscanf(scratch[i].f, "%u", &data);
+		if(data == 0 || feof(scratch[i].f)) continue;
 		PushHeap(h, data, 0);
 	}
 }
@@ -239,7 +306,7 @@ void EndMerge(fita *scratch, int op, int numberScratchFiles)
 {
 	int i, begin, end;
 	
-	if(op == 1)
+	if(op == 0)
 	{
 		begin = 0;
 		end = numberScratchFiles;
@@ -252,31 +319,6 @@ void EndMerge(fita *scratch, int op, int numberScratchFiles)
 	
 	for(i = begin; i < end; i++)
 		closeStream(&scratch[i]);
-}
-
-int IsItOver(int op, int numberScratchFiles)
-{
-	int i, begin, end, outputFile = -1;
-	char f[13] = "f";
-	FILE *temp = NULL;
-	
-	if(op == 1)
-	{
-		begin = 0;
-		end = numberScratchFiles;
-	}
-	else
-	{
-		begin = numberScratchFiles;
-		end = 2*numberScratchFiles;
-	}
-	
-	for(i = begin; i < end; i++)
-	{
-		sprintf(f, "f%d.scratch", i);
-		
-		
-	}
 }
 
 void activateScratchFiles(fita *scratchFiles, int n)
@@ -294,6 +336,14 @@ void deactivateScratchFile(fita *scratchFiles, int index)
 int isActive(fita *scratchFiles, int index)
 {
 	return scratchFiles[index].active == 1;
+}
+
+void addCounterOp(int *i, int op, int numberScratchFiles)
+{
+	if(op == 0)
+		addCounter(i, 0, numberScratchFiles);
+	else
+		addCounter(i, numberScratchFiles, 2*numberScratchFiles);
 }
 
 void addCounter(int *i, int begin, int mod)

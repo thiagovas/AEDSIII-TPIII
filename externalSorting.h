@@ -41,9 +41,11 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles);
 /* @Param numberScratchFiles: Parametro que recebe o número de fitas que estão sendo usadas. */
 void merge(int maxHeapElements, int numberScratchFiles);
 
-void BeginMerge(heap *h,fita *scratch, int op, int numberScratchFiles);
+void BeginMerge(heap *h, fita *scratch, int op, int numberScratchFiles);
 
 void EndMerge(fita *scratch, int op, int numberScratchFiles);
+
+int IsItOver(int op, int numberScratchFiles);
 
 void activateScratchFiles(fita *scratchFiles, int n);
 
@@ -51,10 +53,11 @@ void deactivateScratchFile(fita *scratchFiles, int index);
 
 int isActive(fita *scratchFiles, int index);
 
+void addCounterOp(int *i, int op, int numberScratchFiles);
+
 void addCounter(int *i, int begin, int mod);
 
 void ClearScratchFiles(int begin, int end);
-
 
 #endif
 

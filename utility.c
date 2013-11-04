@@ -20,13 +20,13 @@ int stringtoint(char *arg)
 
 int isFileEmpty(char fileName[])
 {
-    FILE *file = fopen(fileName, "r");
-    int resp = streamIsEmpty(file);
+    FILE *file = fopen(fileName, "a+");
+    int resp = isStreamEmpty(file);
     fclose(file);
     return resp;
 }
 
-int streamIsEmpty(FILE *file)
+int isStreamEmpty(FILE *file)
 {
 	long currentPos = ftell(file);
 	fseek(file, 0, SEEK_END);
