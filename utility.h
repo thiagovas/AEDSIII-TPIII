@@ -23,4 +23,10 @@ int min(int a, int b);
 /* Função que retorna a variável com o maior valor. */
 int max(int a, int b);
 
+int isFileEmpty(char fileName[]);
+
+int streamIsEmpty(FILE *file);
+
+void ClearFile(char fileName[]);
+
 #endif

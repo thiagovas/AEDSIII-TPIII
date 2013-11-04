@@ -18,6 +18,32 @@ int stringtoint(char *arg)
 	return resp;
 }
 
+int isFileEmpty(char fileName[])
+{
+    FILE *file = fopen(fileName, "r");
+    int resp = streamIsEmpty(file);
+    fclose(file);
+    return resp;
+}
+
+int streamIsEmpty(FILE *file)
+{
+	long currentPos = ftell(file);
+	fseek(file, 0, SEEK_END);
+	
+	if (ftell(file) == 0)
+		return 1;
+	
+	fseek(file, currentPos, SEEK_SET);
+	return 0;
+}
+
+void ClearFile(char fileName[])
+{
+	FILE *arq = fopen(fileName, "w");
+	fclose(arq);
+}
+
 /* Função passada para o TAD heap. A heap usa essa função para ordenar os elementos. */
 int comp(const unsigned int a, const unsigned int b)
 {

@@ -31,6 +31,9 @@ int main(int argc, char *argv[])
 	fclose(entrada);
 	fclose(saida);
 	
+	entrada = NULL;
+	saida = NULL;
+	
 	return 0;
 }
 

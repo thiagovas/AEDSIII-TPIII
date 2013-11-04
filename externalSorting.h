@@ -15,24 +15,21 @@
 
 typedef struct{
 	FILE *f;
-	char active = '\0';
+	char active;
+	int numberBlocks;
 } fita;
 
-void openStream(fita *obj, char nomeFita[]);
+void openStream(fita *obj, char fileName[], const char op[]);
 
 void closeStream(fita *obj);
 
-void writeInteger(fita *obj, int value);
+void writeInteger(fita *obj, unsigned int value);
+
+void writeStream(FILE *file, unsigned int value);
 
 void writeEndOfBlock(fita *obj);
 
-void activateScratchFiles(fita *scratchFiles, int n);
-
-void deactivateScratchFiles(fita *scratchFiles, int index);
-
-int isActive(fita *scratchFiles, int index);
-
-/* Método que ordena o arquivo input e imprime o resultado e output. */
+/* Método que ordena o arquivo input e imprime o resultado em output. */
 /* @Param input: Stream que será usada para ler os dados a serem ordenados. */
 /* @Param output: Stream que será usada para escrever os dados do input ordenadamente. */
 /* @Param maxMemory:  Parametro que indica o máximo de memória que a heap pode usar. */
@@ -44,7 +41,19 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles);
 /* @Param numberScratchFiles: Parametro que recebe o número de fitas que estão sendo usadas. */
 void merge(int maxHeapElements, int numberScratchFiles);
 
-void addCounter(int &i, int mod);
+void BeginMerge(heap *h,fita *scratch, int op, int numberScratchFiles);
+
+void EndMerge(fita *scratch, int op, int numberScratchFiles);
+
+void activateScratchFiles(fita *scratchFiles, int n);
+
+void deactivateScratchFile(fita *scratchFiles, int index);
+
+int isActive(fita *scratchFiles, int index);
+
+void addCounter(int *i, int begin, int mod);
+
+void ClearScratchFiles(int begin, int end);
 
 
 #endif

@@ -54,13 +54,12 @@ void PushHeap(heap *obj, unsigned int valor, char mark)
 {
 	char atual = FrontHeapMark(obj);
 	int index = SizeHeap(obj);
-	heap_item *temp = (heap_item*) realloc(obj->values, (SizeHeap(obj)+1)*sizeof(heap_item));
+	heap_item *temp = (heap_item*) realloc(obj->values, (index+1)*sizeof(heap_item));
 	heap_item swap;
-	
 	heap_item neue;
+	
 	neue.value = valor;
 	neue.mark = mark;
-	
 	if(temp == NULL)
 	{
 		// Se temp for null, quer dizer que a alocação de memória não foi feita com sucesso.
@@ -73,7 +72,7 @@ void PushHeap(heap *obj, unsigned int valor, char mark)
 	obj->values[index] = neue;
 	obj->size += 1;
 	
-	while(index > 0 && (!obj->func(obj->values[Father(index)].value, obj->values[index].value) || obj->values[index].mark == atual))
+	while(index > 0 && !obj->func(obj->values[Father(index)].value, obj->values[index].value))
 	{
 		swap = obj->values[Father(index)];
 		obj->values[Father(index)] = obj->values[index];
