@@ -38,6 +38,17 @@ int isStreamEmpty(FILE *file)
 	return 0;
 }
 
+int fileSize(char fileName[])
+{
+	int resp = 0;
+	FILE *temp = fopen(fileName, "a+");
+	fseek(temp, 0L, SEEK_END);
+	resp = ftell(temp);
+	fseek(temp, 0L, SEEK_SET);
+	fclose(temp);
+	return resp;
+}
+
 void ClearFile(char fileName[])
 {
 	FILE *arq = fopen(fileName, "w");

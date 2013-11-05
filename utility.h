@@ -25,6 +25,8 @@ int max(int a, int b);
 
 int isFileEmpty(char fileName[]);
 
+int fileSize(char fileName[]);
+
 int isStreamEmpty(FILE *file);
 
 void ClearFile(char fileName[]);

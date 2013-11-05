@@ -16,7 +16,6 @@
 typedef struct{
 	FILE *f;
 	char active;
-	int numberBlocks;
 } fita;
 
 void openStream(fita *obj, char fileName[], const char op[]);
@@ -39,9 +38,13 @@ void sort(FILE *input, FILE *output, int maxMemory, int numberScratchFiles);
 /* Método que faz a intercalação das fitas. */
 /* @Param maxHeapElements: Parametro que indica o número máximo de elementos que a heap pode ter. */
 /* @Param numberScratchFiles: Parametro que recebe o número de fitas que estão sendo usadas. */
-void merge(int maxHeapElements, int numberScratchFiles);
+void merge(int op, int maxHeapElements, int numberScratchFiles);
+
+void writeEndBlockMerge(fita *scratch, int i, int op, int numberScratchFiles);
 
 void BeginMerge(heap *h, fita *scratch, int op, int numberScratchFiles);
+
+void writeBack(FILE *output, int op, int numberScratchFiles, int maxHeapElements);
 
 void EndMerge(fita *scratch, int op, int numberScratchFiles);
 
