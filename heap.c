@@ -50,9 +50,8 @@ void Heapify(heap *obj, int index)
 }
 
 /* Método que insere um novo elemento na heap. */
-void PushHeap(heap *obj, unsigned int valor, char mark)
+void PushHeap(heap *obj, unsigned int valor, unsigned int origin, char mark)
 {
-	char atual = FrontHeapMark(obj);
 	int index = SizeHeap(obj);
 	heap_item *temp = (heap_item*) realloc(obj->values, (index+1)*sizeof(heap_item));
 	heap_item swap;
@@ -60,6 +59,7 @@ void PushHeap(heap *obj, unsigned int valor, char mark)
 	
 	neue.value = valor;
 	neue.mark = mark;
+	neue.origin = origin;
 	if(temp == NULL)
 	{
 		// Se temp for null, quer dizer que a alocação de memória não foi feita com sucesso.
@@ -88,6 +88,12 @@ unsigned int FrontHeapValue(heap *obj)
 	return obj->values[0].value;
 }
 
+/* Função que retorna a origem(de qual fita veio) do elemento da raiz da heap. */
+unsigned int FrontHeapOrigin(heap *obj)
+{
+	if(SizeHeap(obj) == 0) return -2;
+	return obj->values[0].origin;
+}
 
 /* Função que retorna o valor da variável mark do elemento raiz da heap. */
 char FrontHeapMark(heap *obj)
@@ -99,6 +105,7 @@ char FrontHeapMark(heap *obj)
 /* Método que retira o elemento raiz da heap. */
 void PopHeap(heap *obj)
 {
+	if(SizeHeap(obj) == 0) return;
 	obj->values[0] = obj->values[SizeHeap(obj)-1];
 	obj->size -= 1;
 	obj->values = realloc(obj->values, SizeHeap(obj)*sizeof(heap_item));

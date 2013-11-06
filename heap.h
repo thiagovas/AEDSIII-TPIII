@@ -10,7 +10,7 @@
 #include <ctype.h>
 
 typedef struct{
-	unsigned int value;
+	unsigned int value, origin;
 	char mark;
 } heap_item;
 
@@ -33,10 +33,13 @@ void InitHeap(heap *obj, int (*func)(const unsigned int, const unsigned int));
 void ClearHeap(heap *obj);
 
 /* Método que insere um novo elemento na heap. */
-void PushHeap(heap *obj, unsigned int valor, char mark);
+void PushHeap(heap *obj, unsigned int valor, unsigned int origin, char mark);
 
 /* Função que retorna o valor do elemento raiz da heap. */
 unsigned int FrontHeapValue(heap *obj);
+
+/* Função que retorna a origem(de qual fita veio) do elemento da raiz da heap. */
+unsigned int FrontHeapOrigin(heap *obj);
 
 /* Função que retorna o valor da variável mark do elemento raiz da heap. */
 char FrontHeapMark(heap *obj);

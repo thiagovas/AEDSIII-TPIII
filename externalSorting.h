@@ -22,6 +22,8 @@ void openStream(fita *obj, char fileName[], const char op[]);
 
 void closeStream(fita *obj);
 
+int ReadScratchs(heap *pq, fita *scratch, int op, int numberScratchFiles);
+
 void writeInteger(fita *obj, unsigned int value);
 
 void writeStream(FILE *file, unsigned int value);
@@ -44,7 +46,7 @@ void writeEndBlockMerge(fita *scratch, int i, int op, int numberScratchFiles);
 
 void BeginMerge(heap *h, fita *scratch, int op, int numberScratchFiles);
 
-void writeBack(FILE *output, int op, int numberScratchFiles, int maxHeapElements);
+void writeBack(FILE *output, int finalBlock);
 
 void EndMerge(fita *scratch, int op, int numberScratchFiles);
 
